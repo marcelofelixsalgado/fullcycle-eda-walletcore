@@ -4,8 +4,6 @@ services:
   goapp: 
     build: .
     platform: linux/amd64
-    volumes:
-      - .:/app
     ports:
       - 8080:8080
 
@@ -20,6 +18,7 @@ services:
       - 3306:3306
     volumes:
       - .docker/mysql:/var/lib/mysql
+      - ./scripts/database:/docker-entrypoint-initdb.d
 
   zookeeper:
     image: "confluentinc/cp-zookeeper:6.1.0"
