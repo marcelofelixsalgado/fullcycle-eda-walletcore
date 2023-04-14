@@ -1,8 +1,8 @@
 package create_account
 
 import (
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/entity"
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/gateway"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/entity"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/gateway"
 )
 
 type CreateAccountInputDTO struct {
@@ -14,14 +14,14 @@ type CreateAccountOutputDTO struct {
 }
 
 type CreateAccountUseCase struct {
-	AccountGateway  gateway.AccountGateway
-	ClientGateway   gateway.ClientGateway
+	AccountGateway gateway.AccountGateway
+	ClientGateway  gateway.ClientGateway
 }
 
 func NewCreateAccountUseCase(a gateway.AccountGateway, c gateway.ClientGateway) *CreateAccountUseCase {
 	return &CreateAccountUseCase{
-		AccountGateway:  a,
-		ClientGateway:   c,
+		AccountGateway: a,
+		ClientGateway:  c,
 	}
 }
 

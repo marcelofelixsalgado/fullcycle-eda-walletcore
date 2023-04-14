@@ -3,8 +3,8 @@ package create_account
 import (
 	"testing"
 
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/entity"
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/usecase/mocks"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/entity"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/usecase/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -17,7 +17,6 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 	accountMock := &mocks.AccountGatewayMock{}
 	accountMock.On("Save", mock.Anything).Return(nil)
 
-	
 	uc := NewCreateAccountUseCase(accountMock, clientMock)
 	inputDto := CreateAccountInputDTO{
 		ClientID: client.ID,

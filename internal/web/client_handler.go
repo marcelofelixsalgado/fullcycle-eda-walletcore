@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/usecase/create_client"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/usecase/create_client"
 )
 
 type WebClientHandler struct {

@@ -1,8 +1,6 @@
 package gateway
 
-import (
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/entity"
-)
+import "github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/entity"
 
 type ClientGateway interface {
 	Get(id string) (*entity.Client, error)

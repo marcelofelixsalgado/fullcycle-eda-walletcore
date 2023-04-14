@@ -5,30 +5,43 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/database"
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/event"
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/event/handler"
-	createaccount "github.com.br/devfullcycle/fc-ms-wallet/internal/usecase/create_account"
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/usecase/create_client"
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/usecase/create_transaction"
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/web"
-	"github.com.br/devfullcycle/fc-ms-wallet/internal/web/webserver"
-	"github.com.br/devfullcycle/fc-ms-wallet/pkg/events"
-	"github.com.br/devfullcycle/fc-ms-wallet/pkg/kafka"
-	"github.com.br/devfullcycle/fc-ms-wallet/pkg/uow"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/database"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/event"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/event/handler"
+	createaccount "github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/usecase/create_account"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/usecase/create_client"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/usecase/create_transaction"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/web"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/internal/web/webserver"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/pkg/events"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/pkg/kafka"
+	"github.com.br/marcelofelixsalgado/fullcycle-eda-walletcore/pkg/uow"
 	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "root", "mysql", "3306", "wallet"))
+	databaseConnectionUser := "root"
+	databaseConnectionPassword := "root"
+	databaseConnectionServerAddress := "host.docker.internal"
+	databaseConnectionServerPort := 3306
+	databaseName := "wallet"
+
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		databaseConnectionUser,
+		databaseConnectionPassword,
+		databaseConnectionServerAddress,
+		databaseConnectionServerPort,
+		databaseName)
+
+	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
 	configMap := ckafka.ConfigMap{
-		"bootstrap.servers": "kafka:29092",
+		"bootstrap.servers": "host.docker.internal:9094",
 		"group.id":          "wallet",
 	}
 	kafkaProducer := kafka.NewKafkaProducer(&configMap)
@@ -56,7 +69,7 @@ func main() {
 	createClientUseCase := create_client.NewCreateClientUseCase(clientDb)
 	createAccountUseCase := createaccount.NewCreateAccountUseCase(accountDb, clientDb)
 
-	webserver := webserver.NewWebServer(":8080")
+	webserver := webserver.NewWebServer(":3002")
 
 	clientHandler := web.NewWebClientHandler(*createClientUseCase)
 	accountHandler := web.NewWebAccountHandler(*createAccountUseCase)

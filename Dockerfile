@@ -15,7 +15,7 @@ COPY pkg/ ./pkg/
 
 RUN go build -o walletcore ./cmd/walletcore/main.go 
 
-EXPOSE 8080
+EXPOSE 3002
 
 ENTRYPOINT ["/app/walletcore"]
 # CMD ["tail", "-f", "/dev/null"]
